@@ -1,11 +1,12 @@
 import axios from 'axios'
+import { axiosInstance } from '../config'
 import { FLIGHT_UPDATE_DISPATCH, FLIGHT_UPDATE_SUCCESS , FLIGHT_UPDATE_FAIL , LOAD_FLIGHTS_FAIL, LOAD_FLIGHTS_REQUEST, LOAD_FLIGHTS_SUCCESS, LOAD_FLIGHT_FAIL, LOAD_FLIGHT_REQUEST, LOAD_FLIGHT_SUCCESS, SAVE_SEATS_DISPATCH, SAVE_SEATS_FAIL, SAVE_SEATS_SUCCESS, FLIGHT_DELETE_DISPATCH, FLIGHT_DELETE_SUCCESS, FLIGHT_DELETE_FAIL, FLIGHT_ADD_DISPATCH, FLIGHT_ADD_SUCCESS, FLIGHT_ADD_FAIL } from '../constants/flightConstants'
 
 export const loadFlights = () => async (dispatch) => {
     dispatch ({type : LOAD_FLIGHTS_REQUEST , loading : true})
 
     try {
-        const {data} = await axios.get(`http://localhost:5000/api/flights/`)
+        const {data} = await axiosInstance.get(`api/flights/`)
         dispatch ({type : LOAD_FLIGHTS_SUCCESS , payload : data , loading : false})
     } catch (error) {
         dispatch({
@@ -19,7 +20,7 @@ export const loadFlight = (id) => async (dispatch) => {
     dispatch ({type : LOAD_FLIGHT_REQUEST , loading : true})
 
     try {
-        const {data} = await axios.get(`http://localhost:5000/api/flights/${id}`)
+        const {data} = await axiosInstance.get(`api/flights/${id}`)
         dispatch ({type : LOAD_FLIGHT_SUCCESS , payload : data , loading : false})
     } catch (error) {
         dispatch({
@@ -80,7 +81,7 @@ export const updateFlight = (flight) => async (dispatch , getState) => {
 
         const header = {headers : {'Content-Type' : 'application/json' , 'Authorization' : `Bearer ${user.token}`}};
         
-        const {data} = await axios.put(`http://localhost:5000/api/flights/${flight.id}` , flight , header)
+        const {data} = await axiosInstance.put(`api/flights/${flight.id}` , flight , header)
 
         dispatch ({type : FLIGHT_UPDATE_SUCCESS , success : true , loading : false})
     } catch(error) {
@@ -100,7 +101,7 @@ export const deleteFlight = (id) => async (dispatch , getState) => {
 
         const header = {headers : {'Content-Type' : 'application/json' , 'Authorization' : `Bearer ${user.token}`}};
 
-        const {data} = await axios.delete(`http://localhost:5000/api/flights/${id}` , header)
+        const {data} = await axiosInstance.delete(`api/flights/${id}` , header)
 
         dispatch ({type : FLIGHT_DELETE_SUCCESS , success : true , loading : false})
     } catch(error) {
@@ -120,7 +121,7 @@ export const addFlight = (flight) => async (dispatch , getState) => {
 
         const header = {headers : {'Authorization' : `Bearer ${user.token}`}};
 
-        const {data} = await axios.post(`http://localhost:5000/api/flights/` , flight , header)
+        const {data} = await axiosInstance.post(`api/flights/` , flight , header)
 
         dispatch ({type : FLIGHT_ADD_SUCCESS , success : true , payload : data , loading : false})
     } catch(error) {

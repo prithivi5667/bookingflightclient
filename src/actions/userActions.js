@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosInstance } from '../config';
 import { USER_DELETE_DISPATCH , USER_DELETE_SUCCESS , USER_DELETE_FAIL , USER_UPDATE_DISPATCH , USER_UPDATE_SUCCESS , USER_UPDATE_FAIL, USER_PROFILE_DISPATCH , USER_PROFILE_SUCCESS , USER_PROFILE_FAIL , USER_CREATE_DISPATCH, USER_CREATE_FAIL, USER_CREATE_SUCCESS, USER_LOGIN_DISPATCH, USER_LOGIN_FAIL, USER_LOGIN_SUCCESS, USERS_GET_DISPATCH, USERS_GET_SUCCESS, USERS_GET_FAIL, USER_ADMIN_DISPATCH, USER_ADMIN_SUCCESS, USER_ADMIN_FAIL, UPDATE_USER_DISPATCH, UPDATE_USER_SUCCESS, UPDATE_USER_FAIL } from '../constants/userConstants';
 
 export const createUser = (user) => async(dispatch) => {
@@ -8,7 +9,7 @@ export const createUser = (user) => async(dispatch) => {
     try {
 
         const header = {headers : {'Content-Type' : 'application/json'}}
-        const {data} = await axios.post('http://localhost:5000/api/users/register' , user , header);
+        const {data} = await axiosInstance.post('api/users/register' , user , header);
 
         localStorage.setItem('userData' , JSON.stringify(data))
 
@@ -29,7 +30,7 @@ export const loginUser = (user) => async(dispatch) => {
     try {
 
         const header = {headers : {'Content-Type' : 'application/json'}}
-        const {data} = await axios.post('http://localhost:5000/api/users/login' , user , header);
+        const {data} = await axiosInstance.post('api/users/login' , user , header);
 
         dispatch({type : USER_LOGIN_SUCCESS , loading : false , payload : data});
 
@@ -51,7 +52,7 @@ export const getUserProfile = () => async(dispatch , getState) => {
 
         const header = {headers : {"Authorization" : `Bearer ${user.token}`}}
 
-        const {data} = await axios.get(`http://localhost:5000/api/users/${user._id}`, header);
+        const {data} = await axiosInstance.get(`api/users/${user._id}`, header);
 
         dispatch({type : USER_PROFILE_SUCCESS , loading : false , payload : data});
         
@@ -70,7 +71,7 @@ export const updateProfile = (profile) => async (dispatch , getState) => {
 
         const header = {headers : { 'Content-Type' : 'application/json' , 'Authorization' : `Bearer ${user.token}`}}
 
-        const {data} = await axios.put(`http://localhost:5000/api/users/${user._id}/update`,profile, header);
+        const {data} = await axiosInstance.put(`api/users/${user._id}/update`,profile, header);
 
         dispatch({type : USER_UPDATE_SUCCESS , loading : false , payload : data , success : true});
         dispatch({type : USER_PROFILE_SUCCESS , loading : false , payload : data});
@@ -94,7 +95,7 @@ export const fetchAllUsers = () => async (dispatch , getState) => {
             "Authorization" : `Bearer ${userData.token}`
         }}
 
-        const {data} = await axios.get(`http://localhost:5000/api/users/` , header);
+        const {data} = await axiosInstance.get(`api/users/` , header);
 
         dispatch({type : USERS_GET_SUCCESS , loading : false , payload : data})
     } catch (error) {
@@ -114,7 +115,7 @@ export const removeUser = (id) => async (dispatch , getState) => {
             "Authorization" : `Bearer ${userData.token}`
         }}
 
-        const {data} = await axios.delete(`http://localhost:5000/api/users/${id}` , header);
+        const {data} = await axiosInstance.delete(`api/users/${id}` , header);
 
         dispatch({type : USER_DELETE_SUCCESS ,  success : true , loading : false , payload : data})
     } catch (error) {
@@ -131,7 +132,7 @@ export const getUserAdmin = (id) => async(dispatch , getState) => {
 
         const header = {headers : {"Authorization" : `Bearer ${user.token}`}}
 
-        const {data} = await axios.get(`http://localhost:5000/api/users/${id}`, header);
+        const {data} = await axiosInstance.get(`api/users/${id}`, header);
 
         dispatch({type : USER_ADMIN_SUCCESS , loading : false , payload : data});
         
@@ -151,7 +152,7 @@ export const updateUserProfile = (profile) => async (dispatch , getState) => {
 
         const header = {headers : { 'Content-Type' : 'application/json' , 'Authorization' : `Bearer ${user.token}`}}
 
-        const {data} = await axios.put(`http://localhost:5000/api/users/${id}`,profile, header);
+        const {data} = await axiosInstance.put(`api/users/${id}`,profile, header);
 
         dispatch({type : UPDATE_USER_SUCCESS , loading : false , payload : data , success : true});
         

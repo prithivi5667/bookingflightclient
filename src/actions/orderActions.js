@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosInstance } from '../config'
 const { ORDER_FETCH_DISPATCH , ORDER_FETCH_FAIL , ORDER_FETCH_SUCCESS ,  SAVE_BILLING_DISPATCH, SAVE_BILLING_SUCCESS, SAVE_BILLING_FAIL, SAVE_PAYMENT_DISPATCH, SAVE_PAYMENT_SUCCESS, SAVE_PAYMENT_FAIL, ORDER_CREATE_DISPATCH, ORDER_CREATE_SUCCESS, ORDER_CREATE_FAIL, ORDER_PAID_DISPATCH, ORDER_PAID_SUCCESS, ORDER_PAID_FAIL, ORDER_USER_SUCCESS, ORDER_USER_DISPATCH, ORDER_USER_FAIL, GET_ORDERS_DISPATCH, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL } = require("../constants/orderConstants")
 
 export const savebilling = (data) => async(dispatch) => {
@@ -34,7 +35,7 @@ export const createOrder = (order) => async(dispatch , getState) => {
     try {
 
         const header = {headers : {'Content-Type' : 'application/json' , 'Authorization' : `Bearer ${userData.token}`}}
-        const {data} = await axios.post('http://localhost:5000/api/orders/create' , order , header);
+        const {data} = await axiosInstance.post('api/orders/create' , order , header);
 
         dispatch({type : ORDER_CREATE_SUCCESS , loading : false , success : true , payload : data});
         localStorage.removeItem("passengers");
@@ -58,7 +59,7 @@ export const fetchOrder = (id) => async(dispatch , getState) => {
             "Authorization" : `Bearer ${userData.token}`
         }}
 
-        const {data} = await axios.get(`http://localhost:5000/api/orders/${id}` , header);
+        const {data} = await axiosInstance.get(`api/orders/${id}` , header);
 
         dispatch({type : ORDER_FETCH_SUCCESS , loading : false , payload : data})
     } catch (error) {
@@ -79,7 +80,7 @@ export const updatedOrderToPaid = (id , success) => async(dispatch , getState) =
             "Authorization" : `Bearer ${userData.token}`
         }}
 
-        const {data} = await axios.put(`http://localhost:5000/api/orders/${id}` , success , header);
+        const {data} = await axiosInstance.put(`api/orders/${id}` , success , header);
 
         dispatch({type : ORDER_PAID_SUCCESS , loading : false , payload : data , success : true})
     } catch (error) {
@@ -100,7 +101,7 @@ export const getUserOrders = () => async(dispatch , getState) => {
             "Authorization" : `Bearer ${userData.token}`
         }}
 
-        const {data} = await axios.get(`http://localhost:5000/api/orders/user/` , header);
+        const {data} = await axiosInstance.get(`api/orders/user/` , header);
 
         dispatch({type : ORDER_USER_SUCCESS , loading : false , payload : data})
     } catch (error) {
@@ -121,7 +122,7 @@ export const fetchAllOrders = () => async (dispatch , getState) => {
             "Authorization" : `Bearer ${userData.token}`
         }}
 
-        const {data} = await axios.get(`http://localhost:5000/api/orders/` , header);
+        const {data} = await axiosInstance.get(`api/orders/` , header);
 
         dispatch({type : GET_ORDERS_SUCCESS , loading : false , payload : data})
     } catch (error) {
